@@ -14,16 +14,16 @@ class Solution {
         int length = nums.length;
 
         if (list.size() == length) {
-            permutations.add(list);
+            permutations.add(new ArrayList<>(list));
             return;
         }
 
         for (int index = 0; index < length; index++) {
             if (!used[index]) {
                 used[index] = true;
-                List<Integer> copy = new ArrayList<>(list);
-                copy.add(nums[index]);
-                createPermutations(nums, copy, permutations, used);
+                list.add(nums[index]);
+                createPermutations(nums, list, permutations, used);
+                list.remove(list.size()-1);
                 used[index] = false;
             }
         }
