@@ -18,7 +18,6 @@ class Solution {
             }
         }
 
-
         return leftSum + currentSum >= 0 ? idealIndex : -1;
     }
 }
