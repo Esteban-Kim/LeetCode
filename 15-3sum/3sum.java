@@ -27,12 +27,21 @@ class Solution {
                 tempList.add(sum);
                 tempList.add(nums[begIndex]);
                 tempList.add(nums[endIndex]);
-                tempSet.add(tempList);
+                solution.add(tempList);
                 begIndex++;
+                while (begIndex < endIndex && nums[begIndex] == nums[begIndex-1]) {
+                    begIndex++;
+                }
             } else if (totalSum < 0) {
                 begIndex++;
+                while (begIndex < endIndex && nums[begIndex] == nums[begIndex-1]) {
+                    begIndex++;
+                }
             } else {
                 endIndex--;
+                while (endIndex > begIndex && nums[endIndex] == nums[endIndex+1]) {
+                    endIndex--;
+                }
             }
         }
 
