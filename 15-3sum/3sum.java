@@ -17,17 +17,12 @@ class Solution {
 
     public void twoSum(int[] nums, int sum, int begIndex, List<List<Integer>> solution) {
         int length = nums.length, endIndex = length-1;
-        Set<List<Integer>> tempSet = new HashSet<>();
 
         while (begIndex < endIndex) {
             int totalSum = sum + nums[begIndex] + nums[endIndex];
 
             if (totalSum == 0) {
-                List<Integer> tempList = new ArrayList<>();
-                tempList.add(sum);
-                tempList.add(nums[begIndex]);
-                tempList.add(nums[endIndex]);
-                solution.add(tempList);
+                solution.add(List.of(sum, nums[begIndex], nums[endIndex]));
                 begIndex++;
                 while (begIndex < endIndex && nums[begIndex] == nums[begIndex-1]) {
                     begIndex++;
@@ -44,7 +39,5 @@ class Solution {
                 }
             }
         }
-
-        solution.addAll(tempSet);
     }
 }
