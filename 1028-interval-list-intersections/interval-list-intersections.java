@@ -1,24 +1,26 @@
 class Solution {
     public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
-        int firstIndex = 0, firstLength = firstList.length, secondIndex = 0, secondLength = secondList.length;
+        List<int[]> intersections = new ArrayList<>();
 
-        List<int[]> solution = new ArrayList<>();
+        int fIndex = 0, fLength = firstList.length, sIndex = 0, sLength = secondList.length;
 
-        while (firstIndex < firstLength && secondIndex < secondLength) {
-            int startIntersection = Math.max(firstList[firstIndex][0], secondList[secondIndex][0]);
-            int endIntersection = Math.min(firstList[firstIndex][1], secondList[secondIndex][1]);
+        while (fIndex < fLength && sIndex < sLength) {
+            int fStart = firstList[fIndex][0], fEnd = firstList[fIndex][1];
+            int sStart = secondList[sIndex][0], sEnd = secondList[sIndex][1];
 
-            if (endIntersection-startIntersection >= 0) {
-                solution.add(new int[]{startIntersection, endIntersection});
+            int startIntersection = Math.max(fStart, sStart), endIntersection = Math.min(fEnd, sEnd);
+
+            if (endIntersection >= startIntersection) {
+                intersections.add(new int[]{startIntersection, endIntersection});
             }
 
-            if (secondList[secondIndex][1] < firstList[firstIndex][1]) {
-                secondIndex++;
+            if (fEnd < sEnd) {
+                fIndex++;
             } else {
-                firstIndex++;
+                sIndex++;
             }
         }
 
-        return solution.toArray(new int[solution.size()][]);
+        return intersections.toArray(new int[intersections.size()][]);
     }
 }
