@@ -18,24 +18,22 @@
 
 class Solution {
     public void cleanRoom(Robot robot) {
-        Set<Pair<Integer, Integer>> movements = new HashSet<>();
-        movements.add(new Pair(0, 0));
-        move(robot, movements, 0, 0, 0);
+        Set<Pair<Integer, Integer>> visitedPositions = new HashSet<>();
+        visitedPositions.add(new Pair(0, 0));
+        clean(robot, 0, 0, 0, visitedPositions);
     }
 
-    public void move(Robot robot, Set<Pair<Integer, Integer>> movements, int x, int y, int d) {
+    public void clean(Robot robot, int x, int y, int d, Set<Pair<Integer, Integer>> visitedPositions) {
         robot.clean();
-        
         // up, right, down, left
-        int[][] directions = {{-1,0}, {0,1}, {1,0}, {0,-1}};
+        int[][] directions = {{-1,0},{0,1},{1,0},{0,-1}};
 
         for (int index = 0; index < directions.length; index++) {
-            int newD = (d+index)%4;
-            int newX = x+directions[newD][0], newY = y+directions[newD][1];
-
-            if (!movements.contains(new Pair(newX, newY)) && robot.move()) {
-                movements.add(new Pair(newX, newY));
-                move(robot, movements, newX, newY, newD);
+            int newDirection = (d+index)%4;
+            int newX = x + directions[newDirection][0], newY = y + directions[newDirection][1];
+            if (!visitedPositions.contains(new Pair(newX, newY)) && robot.move()) {
+                visitedPositions.add(new Pair(newX, newY));
+                clean(robot, newX, newY, newDirection, visitedPositions);
                 goBack(robot);
             }
             robot.turnRight();
