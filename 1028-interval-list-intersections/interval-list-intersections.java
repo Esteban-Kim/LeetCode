@@ -19,10 +19,6 @@ class Solution {
             }
         }
 
-        int[][] answer = new int[solution.size()][2];
-        for (int index = 0; index < solution.size(); index++) {
-            answer[index] = solution.get(index);
-        }
-        return answer;
+        return solution.toArray(new int[solution.size()][]);
     }
 }
