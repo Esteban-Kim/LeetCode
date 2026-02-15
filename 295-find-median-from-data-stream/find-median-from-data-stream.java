@@ -3,25 +3,23 @@ class MedianFinder {
     private PriorityQueue<Integer> high;
 
     public MedianFinder() {
-        this.low = new PriorityQueue<>((a, b) -> a-b);
-        this.high = new PriorityQueue<>((a, b) -> b-a);
+        low = new PriorityQueue<>((a, b) -> a-b);
+        high = new PriorityQueue<>((a, b) -> b-a);
     }
     
     public void addNum(int num) {
         low.add(num);
         high.add(low.poll());
-        if (low.size() < high.size()) {
+        if (high.size() > low.size()) {
             low.add(high.poll());
         }
     }
     
     public double findMedian() {
-        // System.out.println(low.size() + " " + high.size());
-        int total = low.size() + high.size();
-        if (total % 2 == 0) {
-            double answer = low.peek()+high.peek();
-            // System.out.println(answer);
-            return ((double)answer/(double)2.0);
+        int size = low.size()+high.size();
+        if (size%2 == 0) {
+            double total = low.peek()+high.peek();
+            return total/2;
         }
         return low.peek();
     }
