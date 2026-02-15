@@ -1,28 +1,28 @@
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> solution = new ArrayList<>();
+        List<List<Integer>> distinctThreeSums = new ArrayList<>();
+        Set<Integer> usedNums = new HashSet<>();
 
         Arrays.sort(nums);
-        Set<Integer> used = new HashSet<>();
 
         for (int index = 0; index < nums.length; index++) {
-            if(!used.contains(nums[index])) {
-                twoSum(nums, nums[index], index+1, solution);
+            if (!usedNums.contains(nums[index])) {
+                twoSum(nums, index+1, nums[index], distinctThreeSums);
             }
-            used.add(nums[index]);
+            usedNums.add(nums[index]);
         }
 
-        return solution;
+        return distinctThreeSums;
     }
 
-    public void twoSum(int[] nums, int sum, int begIndex, List<List<Integer>> solution) {
-        int length = nums.length, endIndex = length-1;
+    public void twoSum(int[] nums, int index, int sum, List<List<Integer>> distinctThreeSums) {
+        int begIndex = index, endIndex = nums.length-1;
 
         while (begIndex < endIndex) {
             int totalSum = sum + nums[begIndex] + nums[endIndex];
 
             if (totalSum == 0) {
-                solution.add(List.of(sum, nums[begIndex], nums[endIndex]));
+                distinctThreeSums.add(Arrays.asList(sum, nums[begIndex], nums[endIndex]));
                 begIndex++;
                 while (begIndex < endIndex && nums[begIndex] == nums[begIndex-1]) {
                     begIndex++;
@@ -34,7 +34,7 @@ class Solution {
                 }
             } else {
                 endIndex--;
-                while (endIndex > begIndex && nums[endIndex] == nums[endIndex+1]) {
+                while (begIndex < endIndex && nums[endIndex] == nums[endIndex+1]) {
                     endIndex--;
                 }
             }
