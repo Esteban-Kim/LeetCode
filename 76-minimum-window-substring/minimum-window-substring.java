@@ -20,15 +20,15 @@ class Solution {
         while (endIndex < sLength) {
             char current = s.charAt(endIndex++);
             sFrequency.put(current, sFrequency.getOrDefault(current, 0)+1);
-            if (containsT(sFrequency, targetFrequency)) {
-                int currentLength = endIndex-begIndex;
-                if (solutionLength > currentLength) {
-                    solutionLength = Math.min(solutionLength, endIndex-begIndex);
-                    solution = s.substring(begIndex, endIndex);
-                }
+            // if (containsT(sFrequency, targetFrequency)) {
+            //     int currentLength = endIndex-begIndex;
+            //     if (solutionLength > currentLength) {
+            //         solutionLength = Math.min(solutionLength, endIndex-begIndex);
+            //         solution = s.substring(begIndex, endIndex);
+            //     }
                 
                 while (containsT(sFrequency, targetFrequency)) {
-                    currentLength = endIndex-begIndex;
+                    int currentLength = endIndex-begIndex;
                     if (solutionLength > currentLength) {
                         solutionLength = Math.min(solutionLength, endIndex-begIndex);
                         solution = s.substring(begIndex, endIndex);
@@ -36,7 +36,7 @@ class Solution {
                     char begCharacter = s.charAt(begIndex++);
                     sFrequency.put(begCharacter, sFrequency.getOrDefault(begCharacter, 0)-1);
                 }
-            }
+            // }
         }
 
         return solution;
