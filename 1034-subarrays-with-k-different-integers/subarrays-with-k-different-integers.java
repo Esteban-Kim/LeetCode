@@ -1,27 +1,25 @@
 class Solution {
     public int subarraysWithKDistinct(int[] nums, int k) {
-        return slidingWindo(nums, k)-slidingWindo(nums, k-1);
+        return subarrays(nums, k) - subarrays(nums, k-1);
     }
 
-    public int slidingWindo(int[] nums, int k) {
-        int begIndex = 0, endIndex = 0, length = nums.length;
-        int totalCount = 0;
+    public int subarrays(int[] nums, int k) {
+        int left = 0, right = 0, length = nums.length, total = 0;
+        Map<Integer, Integer> frequency = new HashMap<>();
 
-        Map<Integer, Integer> map = new HashMap<>();
-
-        while (endIndex < length) {
-            int val = nums[endIndex++];
-            map.put(val, map.getOrDefault(val, 0)+1);
-            while (map.size() > k) {
-                int remove = nums[begIndex++];
-                map.put(remove, map.get(remove)-1);
-                if (map.get(remove) == 0) {
-                    map.remove(remove);
+        while (right < length) {
+            int num = nums[right++];
+            frequency.put(num, frequency.getOrDefault(num, 0)+1);
+            while (frequency.size() > k) {
+                int remove = nums[left++];
+                frequency.put(remove, frequency.get(remove)-1);
+                if (frequency.get(remove) == 0) {
+                    frequency.remove(remove);
                 }
             }
-            totalCount += (endIndex-begIndex);
+            total += (right-left);
         }
 
-        return totalCount;
+        return total;
     }
 }
