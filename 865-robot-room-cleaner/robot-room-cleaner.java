@@ -18,22 +18,23 @@
 
 class Solution {
     public void cleanRoom(Robot robot) {
-        Set<Pair<Integer, Integer>> visitedPositions = new HashSet<>();
-        visitedPositions.add(new Pair(0, 0));
-        clean(robot, 0, 0, 0, visitedPositions);
+        Set<Pair<Integer, Integer>> visited = new HashSet<>();
+        visited.add(new Pair(0, 0));
+        clean(robot, 0, 0, 0, visited);
     }
 
-    public void clean(Robot robot, int x, int y, int d, Set<Pair<Integer, Integer>> visitedPositions) {
+    public void clean(Robot robot, int x, int y, int d, Set<Pair<Integer, Integer>> visited) {
         robot.clean();
         // up, right, down, left
         int[][] directions = {{-1,0},{0,1},{1,0},{0,-1}};
 
         for (int index = 0; index < directions.length; index++) {
             int newDirection = (d+index)%4;
-            int newX = x + directions[newDirection][0], newY = y + directions[newDirection][1];
-            if (!visitedPositions.contains(new Pair(newX, newY)) && robot.move()) {
-                visitedPositions.add(new Pair(newX, newY));
-                clean(robot, newX, newY, newDirection, visitedPositions);
+            int newX = directions[newDirection][0]+x;
+            int newY = directions[newDirection][1]+y;
+            if (!visited.contains(new Pair(newX, newY)) && robot.move()) {
+                visited.add(new Pair(newX, newY));
+                clean(robot, newX, newY, newDirection, visited);
                 goBack(robot);
             }
             robot.turnRight();
