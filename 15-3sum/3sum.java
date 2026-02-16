@@ -1,28 +1,28 @@
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> distinctThreeSums = new ArrayList<>();
-        Set<Integer> usedNums = new HashSet<>();
-
         Arrays.sort(nums);
+        List<List<Integer>> threeSums = new ArrayList<>();
+        Set<Integer> available = new HashSet<>();
 
         for (int index = 0; index < nums.length; index++) {
-            if (!usedNums.contains(nums[index])) {
-                twoSum(nums, index+1, nums[index], distinctThreeSums);
+            int num = nums[index];
+            if (!available.contains(num)) {
+                distinctTwoSum(nums, index+1, num, threeSums);
             }
-            usedNums.add(nums[index]);
+            available.add(num);
         }
 
-        return distinctThreeSums;
+        return threeSums;
     }
 
-    public void twoSum(int[] nums, int index, int sum, List<List<Integer>> distinctThreeSums) {
-        int begIndex = index, endIndex = nums.length-1;
+    public void distinctTwoSum(int[] nums, int index, int firstValue, List<List<Integer>> threeSums) {
+        int length = nums.length, begIndex = index, endIndex = length-1;
 
         while (begIndex < endIndex) {
-            int totalSum = sum + nums[begIndex] + nums[endIndex];
-
+            int totalSum = firstValue + nums[begIndex] + nums[endIndex];
+            // System.out.println(firstValue + " " + nums[begIndex] + " " + nums[endIndex] + " " + totalSum);
             if (totalSum == 0) {
-                distinctThreeSums.add(Arrays.asList(sum, nums[begIndex], nums[endIndex]));
+                threeSums.add(Arrays.asList(firstValue, nums[begIndex], nums[endIndex]));
                 begIndex++;
                 while (begIndex < endIndex && nums[begIndex] == nums[begIndex-1]) {
                     begIndex++;
@@ -34,7 +34,7 @@ class Solution {
                 }
             } else {
                 endIndex--;
-                while (begIndex < endIndex && nums[endIndex] == nums[endIndex+1]) {
+                while (endIndex > begIndex && nums[endIndex] == nums[endIndex+1]) {
                     endIndex--;
                 }
             }
