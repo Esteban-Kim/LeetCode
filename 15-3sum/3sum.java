@@ -1,6 +1,7 @@
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
         Arrays.sort(nums);
+        
         List<List<Integer>> threeSums = new ArrayList<>();
         Set<Integer> available = new HashSet<>();
 
@@ -20,7 +21,6 @@ class Solution {
 
         while (begIndex < endIndex) {
             int totalSum = firstValue + nums[begIndex] + nums[endIndex];
-            // System.out.println(firstValue + " " + nums[begIndex] + " " + nums[endIndex] + " " + totalSum);
             if (totalSum == 0) {
                 threeSums.add(Arrays.asList(firstValue, nums[begIndex], nums[endIndex]));
                 begIndex++;
