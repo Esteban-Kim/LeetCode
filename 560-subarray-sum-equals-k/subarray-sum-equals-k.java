@@ -1,17 +1,18 @@
 class Solution {
     public int subarraySum(int[] nums, int k) {
-        int count = 0, length = nums.length, sum = 0;
-        Map<Integer, Integer> possibilities = new HashMap<>();
-        possibilities.put(0, 1);
+        Map<Integer, Integer> leftSum = new HashMap<>();
+        leftSum.put(0, 1);
+        int runningSum = 0, totalSubarrays = 0;
 
-        for (int index = 0; index < length; index++) {
-            sum += nums[index];
-            if (possibilities.containsKey(sum-k)) {
-                count += possibilities.get(sum-k);
+        for (int num : nums) {
+            runningSum += num;
+            int target = runningSum-k;
+            if (leftSum.get(target) != null) {
+                totalSubarrays += leftSum.get(target);
             }
-            possibilities.put(sum, possibilities.getOrDefault(sum, 0)+1);
+            leftSum.put(runningSum, leftSum.getOrDefault(runningSum, 0)+1);
         }
 
-        return count;
+        return totalSubarrays;
     }
 }
