@@ -1,6 +1,6 @@
 class MedianFinder {
-    private PriorityQueue<Integer> low;
-    private PriorityQueue<Integer> high;
+    PriorityQueue<Integer> low;
+    PriorityQueue<Integer> high;
 
     public MedianFinder() {
         low = new PriorityQueue<>((a, b) -> a-b);
@@ -16,10 +16,8 @@ class MedianFinder {
     }
     
     public double findMedian() {
-        int size = low.size()+high.size();
-        if (size%2 == 0) {
-            double total = low.peek()+high.peek();
-            return total/2;
+        if ((low.size()+high.size()) % 2 == 0) {
+            return (double)((low.peek()+high.peek())/2.0);
         }
         return low.peek();
     }
