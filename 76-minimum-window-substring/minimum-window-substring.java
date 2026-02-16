@@ -1,54 +1,47 @@
 class Solution {
     public String minWindow(String s, String t) {
-        int begIndex = 0, endIndex = 0, sLength = s.length();
-
-        Map<Character, Integer> targetFrequency = new HashMap<>();
-        for (char c : t.toCharArray()) {
-            targetFrequency.put(c, targetFrequency.getOrDefault(c, 0)+1);
-        }
-
         Map<Character, Integer> sFrequency = new HashMap<>();
+        Map<Character, Integer> tFrequency = new HashMap<>();
 
-        String solution = "";
-        int solutionLength = Integer.MAX_VALUE;
-        
-        /**
-        step 1: increment endIndex until we find a solution
-        Then we want to decrement begIndex as long as there is a solution
-        If no solution exists then we continue back with step 1
-         */
-        while (endIndex < sLength) {
-            char current = s.charAt(endIndex++);
-            sFrequency.put(current, sFrequency.getOrDefault(current, 0)+1);
-            // if (containsT(sFrequency, targetFrequency)) {
-            //     int currentLength = endIndex-begIndex;
-            //     if (solutionLength > currentLength) {
-            //         solutionLength = Math.min(solutionLength, endIndex-begIndex);
-            //         solution = s.substring(begIndex, endIndex);
-            //     }
-                
-                while (containsT(sFrequency, targetFrequency)) {
-                    int currentLength = endIndex-begIndex;
-                    if (solutionLength > currentLength) {
-                        solutionLength = Math.min(solutionLength, endIndex-begIndex);
-                        solution = s.substring(begIndex, endIndex);
-                    }
-                    char begCharacter = s.charAt(begIndex++);
-                    sFrequency.put(begCharacter, sFrequency.getOrDefault(begCharacter, 0)-1);
-                }
-            // }
+        for (char c : t.toCharArray()) {
+            tFrequency.put(c, tFrequency.getOrDefault(c, 0)+1);
         }
 
-        return solution;
-    }
+        int minWindow = Integer.MAX_VALUE, left = 0, right = 0, length = s.length();
+        String minString = "";
 
-    public boolean containsT(Map<Character, Integer> sFrequency, Map<Character, Integer> targetFrequency) {
-        for (Map.Entry<Character, Integer> entry : targetFrequency.entrySet()) {
-            if (sFrequency.getOrDefault(entry.getKey(), 0)-entry.getValue() < 0) {
-                return false;
+        while (right < length) {
+            char c = s.charAt(right++);
+            sFrequency.put(c, sFrequency.getOrDefault(c, 0)+1);
+            if (isValid(tFrequency, sFrequency)) {
+                if (right-left < minWindow) {
+                    minWindow = right-left;
+                    minString = s.substring(left, right);
+                }
+
+                char r = s.charAt(left++);
+                sFrequency.put(r, sFrequency.getOrDefault(r, 0)-1);
+
+                while (isValid(tFrequency, sFrequency)) {
+                    if (right-left < minWindow) {
+                        minWindow = right-left;
+                        minString = s.substring(left, right);
+                    }
+                    r = s.charAt(left++);
+                    sFrequency.put(r, sFrequency.getOrDefault(r, 0)-1);
+                }
             }
         }
 
+        return minString;
+    }
+
+    public boolean isValid(Map<Character, Integer> tFrequency, Map<Character, Integer> sFrequency) {
+        for (Map.Entry<Character, Integer> entry : tFrequency.entrySet()) {
+            if (entry.getValue()-sFrequency.getOrDefault(entry.getKey(), 0) > 0) {
+                return false;
+            }
+        }
         return true;
     }
 }
