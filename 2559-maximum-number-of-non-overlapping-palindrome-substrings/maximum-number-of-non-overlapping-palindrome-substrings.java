@@ -12,8 +12,6 @@ class Solution {
             return count;
         }
 
-        System.out.println(palindromes.size());
-
         int min = palindromes.get(0).get(1);
         count++;
 
