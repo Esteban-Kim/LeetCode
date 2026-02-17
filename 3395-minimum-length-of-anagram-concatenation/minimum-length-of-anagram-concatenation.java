@@ -1,44 +1,37 @@
 class Solution {
     public int minAnagramLength(String s) {
-        if (s.length() == 1) {
-            return 1;
-        }
-        List<Integer> validLengths = new ArrayList<>();
-        findValidLengths(s.length(), validLengths);
-        Collections.sort(validLengths);
+        List<Integer> validAnagramLengths = new ArrayList<>();
 
-        for (int num : validLengths) {
-            if (isValid(num, s)) {
-                return num;
+        findValidAnagramLengths(s.length(), validAnagramLengths);
+
+        Collections.sort(validAnagramLengths);
+
+        for (int length : validAnagramLengths) {
+            String target = s.substring(0, length);
+            boolean isValid = true;
+            for (int index = length; index < s.length(); index += length) {
+                if (!isSame(target, s.substring(index, index+length))) {
+                    isValid = false;
+                    break;
+                }
+            }
+            if (isValid) {
+                return length;
             }
         }
 
-        return -1;
+        return s.length();
     }
 
-    public boolean isValid(int size, String s) {
-        // System.out.println(size);
-        String target = s.substring(0, size);
-
-        for (int index = size; index < s.length(); index += size) {
-            String next = s.substring(index, index+size);
-            if (!isSame(target, next)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public boolean isSame(String target, String other) {
-        int[] t = new int[26];
+    public boolean isSame(String target, String next) {
+        int[] frequency = new int[26];
         for (char c : target.toCharArray()) {
-            t[c-'a']++;
+            frequency[c-'a']++;
         }
-        for (char c : other.toCharArray()) {
-            t[c-'a']--;
+        for (char c : next.toCharArray()) {
+            frequency[c-'a']--;
         }
-        for (int num : t) {
+        for (int num : frequency) {
             if (num != 0) {
                 return false;
             }
@@ -46,17 +39,18 @@ class Solution {
         return true;
     }
 
-    public void findValidLengths(int n, List<Integer> validLengths) {
-        int current = 1;
+    public void findValidAnagramLengths(int n, List<Integer> validAnagramLengths) {
+        int length = 1;
+        Set<Integer> validLengths = new HashSet<>();
 
-        while (current <= (n/2)) {
-            if (n%current == 0) {
-                validLengths.add(current);
-                if (n/current != current) {
-                    validLengths.add(n/current);
-                }
+        while (length <= (n/2)) {
+            if (n%length == 0) {
+                validLengths.add(length);
+                validLengths.add(n/length);
             }
-            current++;
+            length++;
         }
+
+        validAnagramLengths.addAll(validLengths);
     }
 }
