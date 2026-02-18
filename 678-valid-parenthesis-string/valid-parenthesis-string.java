@@ -1,33 +1,34 @@
 class Solution {
     public boolean checkValidString(String s) {
-        Stack<Integer> lefts = new Stack<>();
-        Stack<Integer> asteriks = new Stack<>();
+        Stack<Integer> left = new Stack<>();
+        Stack<Integer> asterik = new Stack<>();
 
         for (int index = 0; index < s.length(); index++) {
             char c = s.charAt(index);
             if (c == '(') {
-                lefts.push(index);
+                left.push(index);
             } else if (c == '*') {
-                asteriks.push(index);
+                asterik.push(index);
             } else {
-                if (!lefts.isEmpty()) {
-                    lefts.pop();
-                } else if (!asteriks.isEmpty()) {
-                    asteriks.pop();
+                if (left.size() > 0) {
+                    left.pop();
+                } else if (asterik.size() > 0) {
+                    asterik.pop();
                 } else {
                     return false;
                 }
             }
         }
 
-        while (!lefts.isEmpty() && !asteriks.isEmpty()) {
-            if (lefts.peek() > asteriks.peek()) {
+        while (!left.isEmpty() && !asterik.isEmpty()) {
+            if (left.peek() < asterik.peek()) {
+                left.pop();
+                asterik.pop();
+            } else {
                 return false;
             }
-            lefts.pop();
-            asteriks.pop();
         }
 
-        return lefts.isEmpty();
+        return left.isEmpty();
     }
 }
