@@ -1,44 +1,42 @@
 class Solution {
     public String minWindow(String s, String t) {
-        Map<Character, Integer> sFrequency = new HashMap<>();
-        Map<Character, Integer> tFrequency = new HashMap<>();
+        int left = 0, right = 0, sLength = s.length(), tLength = t.length();
 
-        for (char c : t.toCharArray()) {
-            tFrequency.put(c, tFrequency.getOrDefault(c, 0)+1);
+        if (sLength < tLength) {
+            return "";
         }
 
-        int minWindow = Integer.MAX_VALUE, left = 0, right = 0, length = s.length();
-        String minString = "";
+        Map<Character, Integer> target = new HashMap<>();
 
-        while (right < length) {
+        for (char c : t.toCharArray()) {
+            target.put(c, target.getOrDefault(c, 0)+1);
+        }
+
+        Map<Character, Integer> current = new HashMap<>();
+
+        int minLength = Integer.MAX_VALUE;
+        String answer = "";
+
+        while (right < sLength) {
             char c = s.charAt(right++);
-            sFrequency.put(c, sFrequency.getOrDefault(c, 0)+1);
-            if (isValid(tFrequency, sFrequency)) {
-                if (right-left < minWindow) {
-                    minWindow = right-left;
-                    minString = s.substring(left, right);
+            current.put(c, current.getOrDefault(c, 0)+1);
+            while (meetsTarget(current, target)) {
+                if (right-left < minLength) {
+                    minLength = right-left;
+                    answer = s.substring(left, right);
                 }
-
-                char r = s.charAt(left++);
-                sFrequency.put(r, sFrequency.getOrDefault(r, 0)-1);
-
-                while (isValid(tFrequency, sFrequency)) {
-                    if (right-left < minWindow) {
-                        minWindow = right-left;
-                        minString = s.substring(left, right);
-                    }
-                    r = s.charAt(left++);
-                    sFrequency.put(r, sFrequency.getOrDefault(r, 0)-1);
-                }
+                char remove = s.charAt(left);
+                current.put(remove, current.get(remove)-1);
+                left++;
             }
         }
 
-        return minString;
+        return answer;
     }
 
-    public boolean isValid(Map<Character, Integer> tFrequency, Map<Character, Integer> sFrequency) {
-        for (Map.Entry<Character, Integer> entry : tFrequency.entrySet()) {
-            if (entry.getValue()-sFrequency.getOrDefault(entry.getKey(), 0) > 0) {
+    public boolean meetsTarget(Map<Character, Integer> current, Map<Character, Integer> target) {
+        for (Map.Entry<Character, Integer> entry : target.entrySet()) {
+            if (current.getOrDefault(entry.getKey(), 0)-entry.getValue() < 0) {
                 return false;
             }
         }
