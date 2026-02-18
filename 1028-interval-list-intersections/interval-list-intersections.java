@@ -1,6 +1,6 @@
 class Solution {
     public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
-        List<int[]> intersections = new ArrayList<>();
+        List<int[]> solution = new ArrayList<>();
 
         int firstIndex = 0, secondIndex = 0, firstLength = firstList.length, secondLength = secondList.length;
 
@@ -8,11 +8,11 @@ class Solution {
             int firstStart = firstList[firstIndex][0], firstEnd = firstList[firstIndex][1];
             int secondStart = secondList[secondIndex][0], secondEnd = secondList[secondIndex][1];
 
-            int maxStart = Math.max(firstStart, secondStart);
-            int minEnd = Math.min(firstEnd, secondEnd);
+            int start = Math.max(firstStart, secondStart);
+            int end = Math.min(firstEnd, secondEnd);
 
-            if (maxStart <= minEnd) {
-                intersections.add(new int[]{maxStart, minEnd});
+            if (start <= end) {
+                solution.add(new int[]{start, end});
             }
 
             if (firstEnd < secondEnd) {
@@ -22,6 +22,7 @@ class Solution {
             }
         }
 
-        return intersections.toArray(new int[intersections.size()][]);
+
+        return solution.toArray(new int[solution.size()][]);
     }
 }
