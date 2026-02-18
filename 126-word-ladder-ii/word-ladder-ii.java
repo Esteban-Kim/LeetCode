@@ -1,69 +1,68 @@
 class Solution {
     public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
-        Map<String, Boolean> usedWordMap = new HashMap<>();
+        Map<String, Boolean> visited = new HashMap<>();
         for (String word : wordList) {
-            usedWordMap.put(word, false);
+            visited.put(word, false);
         }
-        List<Set<String>> ladders = new ArrayList<>();
-        
-        if (!bfs(beginWord, endWord, ladders, usedWordMap)) {
+        if (!visited.containsKey(endWord)) {
             return new ArrayList<>();
         }
+        List<List<String>> levels = new ArrayList<>();
+        if (!bfs(beginWord, endWord, visited, levels)) return new ArrayList<>();
+        List<String> start = new ArrayList<>();
+        start.add(endWord);
 
-        Queue<List<String>> queue = new LinkedList<>();
-        queue.add(Arrays.asList(endWord));
+        List<List<String>> answer = new ArrayList<>();
+        answer.add(start);
 
-        for (int index = ladders.size()-1; index >= 0; index--) {
-            Set<String> ladder = ladders.get(index);
-            int size = queue.size();
-            for (int lIndex = 0; lIndex < size; lIndex++) {
-                List<String> temp = queue.poll();
-                for (String l : ladder) {
-                    String compare = temp.get(0);
-                    if (differsByOne(l, compare)) {
-                        List<String> next = new ArrayList<>(temp);
-                        next.addFirst(l);
-                        queue.add(next);
+        for (int index = levels.size()-1; index >= 0; index--) {
+            List<List<String>> tempAnswer = new ArrayList<>();
+            List<String> level = levels.get(index);
+            for (List<String> a : answer) {
+                String first = a.get(0);
+                for (String t : level) {
+                    System.out.println(t + " " + first);
+                    if (difByOne(first, t)) {
+                        List<String> works = new ArrayList<>(a);
+                        works.addFirst(t);
+                        tempAnswer.add(works);
                     }
                 }
             }
+            answer = tempAnswer;
         }
 
-        return new ArrayList<>(queue);
+        return answer;
     }
 
-    public boolean bfs(String beginWord, String endWord, List<Set<String>> ladders, Map<String, Boolean> usedWordMap) {
-        if (!usedWordMap.containsKey(endWord)) {
-            return false;
-        }
-
+    public boolean bfs(String beginWord, String endWord, Map<String, Boolean> visited, List<List<String>> levels) {
         Queue<String> queue = new LinkedList<>();
         queue.add(beginWord);
-        usedWordMap.put(beginWord, true);
+        visited.put(beginWord, true);
 
         while (!queue.isEmpty()) {
             int size = queue.size();
-            Set<String> tempList = new HashSet<>();
+            List<String> level = new ArrayList<>();
             for (int index = 0; index < size; index++) {
                 String next = queue.poll();
+                level.add(next);
                 if (next.equals(endWord)) {
                     return true;
                 }
-                tempList.add(next);
-                for (Map.Entry<String, Boolean> entry : usedWordMap.entrySet()) {
-                    if (!entry.getValue() && differsByOne(entry.getKey(), next)) {
+                for (Map.Entry<String, Boolean> entry : visited.entrySet()) {
+                    if (!entry.getValue() && difByOne(entry.getKey(), next)) {
+                        visited.put(entry.getKey(), true);
                         queue.add(entry.getKey());
-                        usedWordMap.put(entry.getKey(), true);
                     }
                 }
             }
-            ladders.add(tempList);
+            levels.add(level);
         }
 
         return false;
     }
 
-    public boolean differsByOne(String w1, String w2) {
+    public boolean difByOne(String w1, String w2) {
         int count = 0;
         for (int index = 0; index < w1.length(); index++) {
             if (w1.charAt(index) != w2.charAt(index)) {
