@@ -1,66 +1,59 @@
 class Solution {
     public String alienOrder(String[] words) {
+        // w -> e, e -> r, t -> f
         Map<Character, List<Character>> edges = new HashMap<>();
-        Map<Character, Integer> inwards = new HashMap<>();
+        Map<Character, Integer> indegrees = new HashMap<>();
 
-        if (!generateEdges(words, edges, inwards)) {
+        if (!findEdges(words, edges, indegrees)) {
             return "";
         }
 
-        int size = inwards.size();
+        // Kahn's algorithm
+        StringBuilder order = new StringBuilder();
         Queue<Character> queue = new LinkedList<>();
 
-        for (Map.Entry<Character, Integer> entry : inwards.entrySet()) {
+        int size = indegrees.size();
+
+        for (Map.Entry<Character, Integer> entry : indegrees.entrySet()) {
             if (entry.getValue() == 0) {
                 queue.add(entry.getKey());
             }
         }
 
-        StringBuilder answer = new StringBuilder();
-
-
         while (!queue.isEmpty()) {
             Character next = queue.poll();
-            answer.append(next);
-            List<Character> adjacent = edges.getOrDefault(next, new ArrayList<>());
-            for (Character t : adjacent) {
-                inwards.put(t, inwards.get(t)-1);
-                if (inwards.get(t) == 0) {
-                    queue.add(t);
+            order.append(next);
+            List<Character> edge = edges.get(next);
+            for (Character e : edge) {
+                indegrees.put(e, indegrees.get(e)-1);
+                if (indegrees.get(e) == 0) {
+                    queue.add(e);
                 }
             }
         }
 
-        if (size != answer.length()) {
-            return "";
-        }
-
-        return answer.toString();
+        return size == order.length() ? order.toString() : "";
     }
 
-    public boolean generateEdges(String[] words, Map<Character, List<Character>> edges, Map<Character, Integer> inwards) {
-        int length = words.length;
-
+    public boolean findEdges(String[] words, Map<Character, List<Character>> edges, Map<Character, Integer> indegrees) {
         for (String word : words) {
             for (char c : word.toCharArray()) {
                 edges.putIfAbsent(c, new ArrayList<>());
-                inwards.putIfAbsent(c, 0);
+                indegrees.putIfAbsent(c, 0);
             }
         }
 
-        for (int index = 0; index < length-1; index++) {
-            String first = words[index];
-            String second = words[index+1];
-            
-            if (first.length() > second.length() && first.startsWith(second)) {
+        for (int index = 0; index < words.length-1; index++) {
+            String word1 = words[index], word2 = words[index+1];
+            // apple vs app
+            if (word1.length() > word2.length() && word1.startsWith(word2)) {
                 return false;
             }
-            for (int j = 0; j < Math.min(first.length(), second.length()); j++) {
-                if (first.charAt(j) != second.charAt(j)) {
-                    List<Character> temp = edges.getOrDefault(first.charAt(j), new ArrayList<>());
-                    temp.add(second.charAt(j));
-                    edges.put(first.charAt(j), temp);
-                    inwards.put(second.charAt(j), inwards.getOrDefault(second.charAt(j), 0)+1);
+            for (int cIndex = 0; cIndex < Math.min(word1.length(), word2.length()); cIndex++) {
+                char c1 = word1.charAt(cIndex), c2 = word2.charAt(cIndex);
+                if (c1 != c2) {
+                    edges.get(c1).add(c2);
+                    indegrees.put(c2, indegrees.get(c2)+1);
                     break;
                 }
             }
